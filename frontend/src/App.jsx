@@ -18,7 +18,8 @@ function AuthProvider({ children }) {
       const token = localStorage.getItem("kanban_token");
       if (token) {
         try {
-          const res = await fetch("/api/auth/me", {
+          const baseUrl = import.meta.env.VITE_API_URL || '';
+          const res = await fetch(`${baseUrl}/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {

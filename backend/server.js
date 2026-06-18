@@ -13,7 +13,13 @@ const { prisma } = require("./utils/prisma");
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({ origin: "http://localhost:3000", methods: ["GET", "POST"] }));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins, methods: ["GET", "POST", "PUT", "DELETE"] }));
 app.use(express.json());
 
 const authRoutes = require("./routes/auth");
@@ -21,8 +27,8 @@ app.use("/api/auth", authRoutes);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 

@@ -27,8 +27,9 @@ const AuthModal = ({ isOpen, onClose, initialMode }) => {
     setLoading(true);
     try {
       const endpoint = isSignIn ? '/api/auth/signin' : '/api/auth/signup';
+      const baseUrl  = import.meta.env.VITE_API_URL || '';
       const body     = isSignIn ? { email, password } : { name, email, password };
-      const res      = await fetch(endpoint, {
+      const res      = await fetch(`${baseUrl}${endpoint}`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(body),
