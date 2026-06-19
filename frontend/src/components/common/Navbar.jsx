@@ -7,13 +7,11 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
 
   return (
     <nav className="navbar" role="navigation" aria-label="Main navigation">
-      {/* Logo */}
       <div className="navbar-logo">
         <KanbanSquare size={20} strokeWidth={2.5} style={{ color: "#818cf8" }} />
         Kanban Pro
       </div>
 
-      {/* Search */}
       <div className="navbar-search-wrap">
         <Search size={13} className="navbar-search-icon" />
         <input
@@ -27,9 +25,7 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
         />
       </div>
 
-      {/* Right side */}
       <div className="navbar-right">
-        {/* Priority filter */}
         <select
           className="filter-select"
           value={priority}
@@ -43,7 +39,6 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
           <option value="Low">Low</option>
         </select>
 
-        {/* Category filter */}
         <select
           className="filter-select"
           value={category}
@@ -59,7 +54,6 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
 
         <ConnectionStatus />
 
-        {/* New task button */}
         <button
           className="new-task-btn"
           onClick={onNewTask}
@@ -69,7 +63,6 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
           New Task
         </button>
 
-        {/* User info + sign-out */}
         {user && (
           <div className="navbar-user">
             <div className="auth-user-badge" data-testid="auth-user">

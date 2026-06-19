@@ -2,10 +2,6 @@ import { useState } from "react";
 import FileUploader from "./FileUploader";
 import { useAuth } from "../../App";
 
-/**
- * TaskForm — modal form for creating a new task.
- * Emits task:create via the socket passed as prop (or directly).
- */
 function TaskForm({ onClose, createTask }) {
   const { user } = useAuth();
   const [title,       setTitle]       = useState("");

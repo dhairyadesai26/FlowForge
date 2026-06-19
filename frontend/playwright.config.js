@@ -1,8 +1,7 @@
-// playwright.config.js
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./src/tests/e2e",   // ← fixed: tests live in src/tests/e2e
+  testDir: "./src/tests/e2e",
   timeout: 30_000,
   retries: 1,
   use: {

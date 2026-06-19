@@ -8,10 +8,6 @@ import Loader        from "../common/Loader";
 import TaskModal     from "../task/TaskModal";
 import TaskForm      from "../task/TaskForm";
 
-/**
- * KanbanBoard — root board component.
- * Handles drag-and-drop, search/filter, and the create-task modal.
- */
 function KanbanBoard() {
   const { tasks, loading, createTask, updateTask, moveTask, deleteTask } = useTasks();
 
@@ -20,7 +16,6 @@ function KanbanBoard() {
   const [priority,  setPriority]  = useState("All");
   const [category,  setCategory]  = useState("All");
 
-  /* ── Filtered task list ── */
   const filtered = useMemo(() => {
     return tasks.filter((t) => {
       const matchSearch =
@@ -37,7 +32,6 @@ function KanbanBoard() {
   const progress = filtered.filter((t) => t.status === "inprogress");
   const done     = filtered.filter((t) => t.status === "done");
 
-  /* ── Drag end ── */
   const handleDragEnd = (result) => {
     if (!result.destination) return;
     const { draggableId, destination } = result;
@@ -49,7 +43,6 @@ function KanbanBoard() {
 
   return (
     <div className="app-wrapper">
-      {/* Sticky Navbar */}
       <Navbar
         search={search}     setSearch={setSearch}
         priority={priority} setPriority={setPriority}
@@ -58,7 +51,6 @@ function KanbanBoard() {
       />
 
       <main className="main-content">
-        {/* Board header */}
         <div className="board-header" data-testid="board-header">
           <div className="board-title-wrap">
             <h1 className="board-title">Kanban Board</h1>
@@ -68,7 +60,6 @@ function KanbanBoard() {
           </div>
         </div>
 
-        {/* Stats row */}
         <div className="stats-row" data-testid="stats-row">
           <div className="stat-chip chip-total">
             <span className="stat-num">{tasks.length}</span>
@@ -88,7 +79,6 @@ function KanbanBoard() {
           </div>
         </div>
 
-        {/* Drag-and-drop board */}
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="board-grid" data-testid="board-grid">
             <Column
@@ -112,11 +102,9 @@ function KanbanBoard() {
           </div>
         </DragDropContext>
 
-        {/* Analytics dashboard */}
         <Dashboard tasks={tasks} />
       </main>
 
-      {/* Create task modal */}
       <TaskModal isOpen={showModal} onClose={() => setShowModal(false)}>
         <TaskForm
           onClose={() => setShowModal(false)}

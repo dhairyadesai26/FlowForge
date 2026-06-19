@@ -1,10 +1,6 @@
 import { useState } from "react";
 import FileUploader from "./FileUploader";
 
-/**
- * EditTaskForm — modal form for updating an existing task.
- * Calls updateTask (socket helper) and onClose when saved.
- */
 function EditTaskForm({ task, onClose, updateTask }) {
   const [title,       setTitle]       = useState(task.title);
   const [description, setDescription] = useState(task.description);

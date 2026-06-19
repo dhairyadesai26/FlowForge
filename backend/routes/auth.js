@@ -6,7 +6,6 @@ const { prisma } = require("../utils/prisma");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkanbanjwtkey";
 
-// POST /api/auth/signup
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -51,7 +50,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// POST /api/auth/signin
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -90,7 +88,6 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-// GET /api/auth/me
 router.get("/me", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;

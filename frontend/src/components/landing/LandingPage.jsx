@@ -124,7 +124,6 @@ const AuthModal = ({ isOpen, onClose, initialMode }) => {
   );
 };
 
-/* ── Mock Kanban board preview ──────────────────────────────── */
 const PRIORITY_STYLES = {
   high:   { bg: 'rgba(239,68,68,0.15)',   color: '#f87171', border: 'rgba(239,68,68,0.25)' },
   medium: { bg: 'rgba(245,158,11,0.15)',  color: '#fbbf24', border: 'rgba(245,158,11,0.25)' },
@@ -212,7 +211,6 @@ const MockKanban = () => (
   </motion.div>
 );
 
-/* ── Features ───────────────────────────────────────────────── */
 const FEATURES = [
   {
     icon:    <Zap size={20} />,
@@ -240,7 +238,6 @@ const FEATURES = [
   },
 ];
 
-/* ── Landing Page ───────────────────────────────────────────── */
 export default function LandingPage() {
   const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'signin' });
   const navigate = useNavigate();
@@ -253,7 +250,6 @@ export default function LandingPage() {
 
   return (
     <div className="landing-container">
-      {/* ── Background ── */}
       <div className="landing-bg" aria-hidden>
         <div className="landing-orb orb-1" />
         <div className="landing-orb orb-2" />
@@ -261,7 +257,6 @@ export default function LandingPage() {
         <div className="landing-grid" />
       </div>
 
-      {/* ── Nav ── */}
       <nav className="landing-nav">
         <div className="landing-logo">
           <KanbanSquare size={24} strokeWidth={2.5} />
@@ -281,7 +276,6 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero ── */}
       <section className="landing-hero">
         <div className="hero-content">
           <motion.div
@@ -374,10 +368,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Divider ── */}
       <div className="section-divider" />
 
-      {/* ── Features ── */}
       <section className="features-section">
         <motion.div
           className="features-header"
@@ -420,7 +412,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
       <section className="cta-section">
         <motion.div
           className="cta-card"
@@ -443,7 +434,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── Footer ── */}
       <footer className="landing-footer">
         <div className="footer-logo">
           <KanbanSquare size={16} />

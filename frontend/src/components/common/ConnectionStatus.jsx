@@ -1,8 +1,5 @@
 import { useSocket } from "../../hooks/useSocket";
 
-/**
- * ConnectionStatus — pulsing dot + label showing live WebSocket state.
- */
 function ConnectionStatus() {
   const { connected } = useSocket();
 

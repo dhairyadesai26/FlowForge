@@ -2,21 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import React from "react";
 
-/*
- * Tests are in  src/tests/unit/
- * Components are in  src/components/
- * Hooks are in  src/hooks/
- * Services in  src/services/
- * App is in  src/App.jsx
- *
- * Relative paths from src/tests/unit/:
- *   ../../components/...
- *   ../../hooks/...
- *   ../../services/...
- *   ../../App
- */
-
-/* ── Mock socket ── */
 vi.mock("../../services/socket", () => ({
   socket: {
     emit:      vi.fn(),
@@ -26,13 +11,11 @@ vi.mock("../../services/socket", () => ({
   },
 }));
 
-/* ── Mock App auth context ── */
 vi.mock("../../App", () => ({
   useAuth: () => ({ user: null, signIn: vi.fn(), signOut: vi.fn() }),
   AuthContext: React.createContext(null),
 }));
 
-/* ── Mock useTasks ── */
 const mockTasks = [
   { id: "1", title: "Fix login bug",    description: "urgent",    status: "todo",       priority: "High",   category: "Bug",         attachment: "", createdAt: Date.now() },
   { id: "2", title: "Add dark mode",    description: "",          status: "inprogress", priority: "Medium", category: "Feature",     attachment: "", createdAt: Date.now() },

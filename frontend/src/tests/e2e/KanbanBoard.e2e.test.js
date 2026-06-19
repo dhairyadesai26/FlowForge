@@ -1,31 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-/*
-|──────────────────────────────────────────────────────────────────────
-| Kanban Board E2E Tests (Playwright)
-| Requires: frontend dev server on http://localhost:3000
-|           backend server on http://localhost:5000
-|
-| Tests cover all README requirements:
-|  ✅ Create a task
-|  ✅ Delete a task
-|  ✅ Priority dropdown selection
-|  ✅ Category dropdown + verify update
-|  ✅ File upload — valid file
-|  ✅ File upload — invalid file shows error
-|  ✅ Graph (dashboard) is rendered
-|  ✅ Graph updates when task is added
-|──────────────────────────────────────────────────────────────────────
-*/
-
 test.describe("Kanban Board", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
-    // Wait for board to be ready (not loading)
     await expect(page.getByTestId("board-header")).toBeVisible({ timeout: 15_000 });
   });
 
-  /* ── Board renders ── */
   test("board title is visible", async ({ page }) => {
     await expect(page.getByText("Kanban Board")).toBeVisible();
   });
@@ -40,7 +20,6 @@ test.describe("Kanban Board", () => {
     await expect(page.getByTestId("connection-status")).toContainText("Live", { timeout: 10_000 });
   });
 
-  /* ── Create a task ── */
   test("user can create a task and see it on the board", async ({ page }) => {
     const taskTitle = `E2E Task ${Date.now()}`;
 
@@ -55,22 +34,18 @@ test.describe("Kanban Board", () => {
     await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 8_000 });
   });
 
-  /* ── Delete a task ── */
   test("user can delete a task and it disappears", async ({ page }) => {
-    // Create a task first
     const title = `Delete Me ${Date.now()}`;
     await page.getByTestId("new-task-btn").click();
     await page.getByTestId("task-title-input").fill(title);
     await page.getByTestId("create-task-btn").click();
     await expect(page.getByText(title)).toBeVisible({ timeout: 8_000 });
 
-    // Find and delete the card
     const card = page.locator(".task-card", { hasText: title });
     await card.getByText("Delete").click();
     await expect(page.getByText(title)).not.toBeVisible({ timeout: 8_000 });
   });
 
-  /* ── Priority dropdown ── */
   test("user can select a priority level (High)", async ({ page }) => {
     await page.getByTestId("new-task-btn").click();
     const select = page.getByTestId("task-priority-select");
@@ -85,7 +60,6 @@ test.describe("Kanban Board", () => {
     await expect(select).toHaveValue("Low");
   });
 
-  /* ── Category dropdown ── */
   test("user can change task category and see badge on card", async ({ page }) => {
     const title = `Cat Test ${Date.now()}`;
     await page.getByTestId("new-task-btn").click();
@@ -98,7 +72,6 @@ test.describe("Kanban Board", () => {
     await expect(card.getByTestId("task-category-badge")).toContainText("Bug");
   });
 
-  /* ── Edit task ── */
   test("user can edit a task title via the Edit modal", async ({ page }) => {
     const original = `Edit Source ${Date.now()}`;
     const updated  = `Edit Updated ${Date.now()}`;
@@ -120,14 +93,12 @@ test.describe("Kanban Board", () => {
     await expect(page.getByText(original)).not.toBeVisible();
   });
 
-  /* ── Validation ── */
   test("cannot create task with empty title — shows error", async ({ page }) => {
     await page.getByTestId("new-task-btn").click();
     await page.getByTestId("create-task-btn").click();
     await expect(page.getByTestId("form-error")).toBeVisible();
   });
 
-  /* ── Dashboard (graph) ── */
   test("dashboard is rendered below the board", async ({ page }) => {
     await expect(page.getByTestId("dashboard")).toBeVisible();
     await expect(page.getByTestId("progress-chart")).toBeVisible();
@@ -135,25 +106,19 @@ test.describe("Kanban Board", () => {
   });
 
   test("graph updates (progress fill) when new task is added", async ({ page }) => {
-    // Check initial fill width
-    const fill = page.getByTestId("progress-fill");
-
     await page.getByTestId("new-task-btn").click();
     const doneTitle = `Graph Task ${Date.now()}`;
     await page.getByTestId("task-title-input").fill(doneTitle);
     await page.getByTestId("create-task-btn").click();
     await expect(page.getByText(doneTitle)).toBeVisible({ timeout: 8_000 });
 
-    // The dashboard stats row should update
     await expect(page.getByTestId("stats-row")).toBeVisible();
   });
 
-  /* ── Search ── */
   test("search filters tasks by title", async ({ page }) => {
     const uniqueA = `Search Alpha ${Date.now()}`;
     const uniqueB = `Search Beta ${Date.now()}`;
 
-    // Create two tasks
     for (const t of [uniqueA, uniqueB]) {
       await page.getByTestId("new-task-btn").click();
       await page.getByTestId("task-title-input").fill(t);
@@ -167,7 +132,6 @@ test.describe("Kanban Board", () => {
   });
 });
 
-/* ── File Upload E2E ── */
 test.describe("File Upload", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");

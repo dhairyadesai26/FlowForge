@@ -9,10 +9,6 @@ import {
 
 const COLORS = ["#22c55e", "#6366f1", "#f59e0b"];
 
-/**
- * ProgressChart — pie chart showing Done vs In Progress vs To Do breakdown.
- * Also shows a completion % pill and a progress bar.
- */
 function ProgressChart({ tasks }) {
   const done     = tasks.filter((t) => t.status === "done").length;
   const progress = tasks.filter((t) => t.status === "inprogress").length;

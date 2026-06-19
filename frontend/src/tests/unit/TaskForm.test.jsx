@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 
-/* ── Mocks (paths from src/tests/unit/) ── */
 vi.mock("../../services/socket", () => ({
   socket: { emit: vi.fn(), on: vi.fn(), off: vi.fn(), connected: true },
 }));

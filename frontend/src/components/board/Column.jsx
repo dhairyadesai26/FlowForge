@@ -7,9 +7,6 @@ const COL_META = {
   done:       { label: "Done",        cls: "done",       emoji: "✅" },
 };
 
-/**
- * Column — Droppable Kanban column containing Draggable task cards.
- */
 function Column({ columnId, tasks, updateTask, deleteTask }) {
   const meta = COL_META[columnId] ?? { label: columnId, cls: "todo", emoji: "📋" };
 
@@ -22,7 +19,6 @@ function Column({ columnId, tasks, updateTask, deleteTask }) {
           className={`column ${snapshot.isDraggingOver ? "drag-over" : ""}`}
           data-testid={`column-${columnId}`}
         >
-          {/* Header */}
           <div className="column-header">
             <div className="column-title-wrap">
               <span className={`col-indicator ${meta.cls}`} />
@@ -33,7 +29,6 @@ function Column({ columnId, tasks, updateTask, deleteTask }) {
             </span>
           </div>
 
-          {/* Cards */}
           <div className="column-body">
             {tasks.length === 0 && (
               <div className="col-empty">

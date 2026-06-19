@@ -14,9 +14,6 @@ const PRIORITY_COLORS = {
   Low:    "#22c55e",
 };
 
-/**
- * PriorityChart — bar chart showing task count per priority level.
- */
 function PriorityChart({ tasks }) {
   const counts = { High: 0, Medium: 0, Low: 0 };
   tasks.forEach((t) => {

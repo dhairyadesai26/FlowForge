@@ -1,6 +1,3 @@
-/**
- * TaskModal — glassmorphism overlay wrapping form children.
- */
 function TaskModal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
 

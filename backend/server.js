@@ -5,11 +5,6 @@ const cors = require("cors");
 require("dotenv").config();
 const { prisma } = require("./utils/prisma");
 
-/*
-|──────────────────────────────────────────────────
-| Setup
-|──────────────────────────────────────────────────
-*/
 const app = express();
 const server = http.createServer(app);
 
@@ -32,12 +27,6 @@ const io = new Server(server, {
   },
 });
 
-/*
-|──────────────────────────────────────────────────
-| REST fallback — GET /api/tasks
-|──────────────────────────────────────────────────
-*/
-
 app.get("/api/tasks", async (req, res) => {
   try {
     const tasks = await prisma.task.findMany({
@@ -52,7 +41,6 @@ app.get("/api/tasks", async (req, res) => {
 
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
-/* ── PDF Proxy — fetch Cloudinary PDF and serve inline ── */
 app.get("/api/proxy-pdf", async (req, res) => {
   const { url } = req.query;
   if (!url || !url.startsWith("https://res.cloudinary.com/")) {
@@ -82,16 +70,9 @@ app.get("/api/proxy-pdf", async (req, res) => {
   }
 });
 
-/*
-|──────────────────────────────────────────────────
-| Socket.IO — Real-time Events
-|──────────────────────────────────────────────────
-*/
-
 io.on("connection", async (socket) => {
   console.log(`✅ Connected: ${socket.id}`);
 
-  /* ── sync:tasks — send all tasks to newly connected client ── */
   try {
     const tasks = await prisma.task.findMany({
       orderBy: { createdAt: "asc" },
@@ -102,7 +83,6 @@ io.on("connection", async (socket) => {
     socket.emit("tasks:sync", []);
   }
 
-  /* ── task:create ── */
   socket.on("task:create", async (taskData) => {
     try {
       const task = await prisma.task.create({
@@ -123,7 +103,6 @@ io.on("connection", async (socket) => {
     }
   });
 
-  /* ── task:update ── */
   socket.on("task:update", async (updatedTask) => {
     try {
       const task = await prisma.task.update({
@@ -144,7 +123,6 @@ io.on("connection", async (socket) => {
     }
   });
 
-  /* ── task:move ── */
   socket.on("task:move", async ({ taskId, destination }) => {
     try {
       await prisma.task.update({
@@ -158,7 +136,6 @@ io.on("connection", async (socket) => {
     }
   });
 
-  /* ── task:delete ── */
   socket.on("task:delete", async (taskId) => {
     try {
       await prisma.task.delete({ where: { id: taskId } });
@@ -174,19 +151,12 @@ io.on("connection", async (socket) => {
   });
 });
 
-/*
-|──────────────────────────────────────────────────
-| Start Server
-|──────────────────────────────────────────────────
-*/
-
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`🚀 Kanban Pro server on http://localhost:${PORT}`);
 });
 
-// Graceful shutdown
 process.on("SIGINT", async () => {
   await prisma.$disconnect();
   process.exit(0);

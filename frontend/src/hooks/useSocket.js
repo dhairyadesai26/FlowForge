@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { socket } from "../services/socket";
 
-/**
- * useSocket — tracks live connection status to the backend Socket.IO server.
- * Used by ConnectionStatus and Navbar.
- */
 export function useSocket() {
   const [connected, setConnected] = useState(socket.connected);
   const [error, setError] = useState(null);

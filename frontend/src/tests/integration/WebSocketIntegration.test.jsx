@@ -2,19 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import React from "react";
 
-/*
- * Integration tests — paths from src/tests/integration/:
- *   ../../components/...
- *   ../../services/...
- *   ../../App
- *
- * NOTE: vi.mock factory cannot reference variables declared outside it
- *       (hoisting limitation). Use a module-level capture pattern instead.
- */
-
 const socketHandlers = {};
 
-// Capture emit calls via a module-level ref (avoids hoisting issue)
 const emitRef = { fn: null };
 
 vi.mock("../../services/socket", () => {

@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
-/* ── Mocks (paths from src/tests/unit/) ── */
 vi.mock("../../services/socket", () => ({
   socket: { emit: vi.fn(), on: vi.fn(), off: vi.fn(), connected: true },
 }));
@@ -76,10 +75,8 @@ describe("FileUploader", () => {
   it("clears the error after a valid file is chosen", () => {
     render_();
     const input = screen.getByTestId("file-input");
-    // First: invalid
     fireEvent.change(input, { target: { files: [makeFile("bad.txt", "text/plain")] } });
     expect(screen.getByTestId("file-error")).toBeInTheDocument();
-    // Then: valid
     fireEvent.change(input, { target: { files: [makeFile("ok.png", "image/png")] } });
     expect(screen.queryByTestId("file-error")).not.toBeInTheDocument();
   });

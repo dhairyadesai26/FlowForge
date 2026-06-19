@@ -13,27 +13,17 @@ export function openAttachment(url) {
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-/**
- * Derive what kind of attachment a URL represents.
- * Returns 'image' | 'pdf' | null
- */
 function getAttachmentType(url) {
   if (!url) return null;
-  // raw/upload = legacy PDF upload; image/upload + .pdf extension = new approach
   if (url.includes("/raw/upload/") || /\.pdf(\?|$)/i.test(url)) return "pdf";
   return "image";
 }
 
-/**
- * FileUploader — uploads files to Cloudinary on selection.
- * Passes back a permanent Cloudinary URL via setAttachment.
- */
 function FileUploader({ setAttachment, currentUrl }) {
   const [uploading, setUploading] = useState(false);
   const [uploadErr, setUploadErr] = useState("");
   const [dragging, setDragging] = useState(false);
   const [fileName, setFileName] = useState("");
-  // null = no new upload yet; fall back to currentUrl for display
   const [newUrl, setNewUrl] = useState(null);
   const inputRef = useRef(null);
 
@@ -67,7 +57,7 @@ function FileUploader({ setAttachment, currentUrl }) {
 
       const url = data.secure_url;
       setNewUrl(url);
-      setAttachment(url);   // propagate permanent URL to parent form
+      setAttachment(url);
     } catch (err) {
       setUploadErr(`Upload failed: ${err.message}`);
     } finally {
@@ -86,7 +76,6 @@ function FileUploader({ setAttachment, currentUrl }) {
 
   return (
     <div>
-      {/* Drop zone */}
       <div
         className={`file-zone ${dragging ? "dragging" : ""} ${uploading ? "uploading" : ""}`}
         onDrop={onDrop}
@@ -121,7 +110,6 @@ function FileUploader({ setAttachment, currentUrl }) {
         <div className="file-zone-hint">PNG, JPG, GIF, WEBP, PDF</div>
       </div>
 
-      {/* Upload progress / error */}
       {uploading && (
         <div style={{
           marginTop: "0.5rem",
@@ -142,7 +130,6 @@ function FileUploader({ setAttachment, currentUrl }) {
         </div>
       )}
 
-      {/* Attachment preview */}
       {activeUrl && !uploading && !uploadErr && (
         <div style={{ marginTop: "0.75rem" }}>
           {activeType === "image" && (

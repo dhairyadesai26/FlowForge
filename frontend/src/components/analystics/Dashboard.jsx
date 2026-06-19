@@ -1,9 +1,6 @@
 import ProgressChart from "./ProgressChart";
 import PriorityChart from "./PriorityChart";
 
-/**
- * Dashboard — analytics section showing completion chart and priority breakdown.
- */
 function Dashboard({ tasks }) {
   return (
     <section className="dashboard" data-testid="dashboard">
