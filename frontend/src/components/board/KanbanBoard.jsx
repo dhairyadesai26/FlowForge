@@ -7,6 +7,7 @@ import Navbar        from "../common/Navbar";
 import Loader        from "../common/Loader";
 import TaskModal     from "../task/TaskModal";
 import TaskForm      from "../task/TaskForm";
+import { Plus }      from "lucide-react";
 
 function KanbanBoard() {
   const { tasks, loading, createTask, updateTask, moveTask, deleteTask } = useTasks();
@@ -80,30 +81,41 @@ function KanbanBoard() {
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="board-grid" data-testid="board-grid">
-            <Column
-              columnId="todo"
-              tasks={todo}
-              updateTask={updateTask}
-              deleteTask={deleteTask}
-            />
-            <Column
-              columnId="inprogress"
-              tasks={progress}
-              updateTask={updateTask}
-              deleteTask={deleteTask}
-            />
-            <Column
-              columnId="done"
-              tasks={done}
-              updateTask={updateTask}
-              deleteTask={deleteTask}
-            />
+          <div className="board-scroll-container">
+            <div className="board-grid" data-testid="board-grid">
+              <Column
+                columnId="todo"
+                tasks={todo}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+              <Column
+                columnId="inprogress"
+                tasks={progress}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+              <Column
+                columnId="done"
+                tasks={done}
+                updateTask={updateTask}
+                deleteTask={deleteTask}
+              />
+            </div>
           </div>
         </DragDropContext>
 
         <Dashboard tasks={tasks} />
       </main>
+
+      {/* Mobile Floating Action Button */}
+      <button 
+        className="new-task-fab" 
+        onClick={() => setShowModal(true)}
+        aria-label="Create new task"
+      >
+        <Plus size={24} strokeWidth={2.5} />
+      </button>
 
       <TaskModal isOpen={showModal} onClose={() => setShowModal(false)}>
         <TaskForm

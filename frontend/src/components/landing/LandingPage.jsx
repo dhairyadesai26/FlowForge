@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   KanbanSquare, ArrowRight, Zap, BarChart2,
-  Shield, Layers, Activity, CheckCircle2,
+  Shield, Layers, Activity, CheckCircle2, Menu, X
 } from 'lucide-react';
 import { useAuth } from '../../App';
 import './LandingPage.css';
@@ -240,13 +240,26 @@ const FEATURES = [
 
 export default function LandingPage() {
   const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'signin' });
+  const [navOpen, setNavOpen] = useState(false);
   const navigate = useNavigate();
   const { user }  = useAuth();
 
   const openAuth = (mode) => {
+    setNavOpen(false); // Close mobile drawer if open
     if (user) navigate('/app');
     else setAuthModal({ isOpen: true, mode });
   };
+
+  // Close nav on resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 900) {
+        setNavOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="landing-container">
@@ -262,7 +275,9 @@ export default function LandingPage() {
           <KanbanSquare size={24} strokeWidth={2.5} />
           Kanban Pro
         </div>
-        <div className="landing-nav-actions">
+
+        {/* Desktop Actions */}
+        <div className="landing-nav-actions desktop-actions">
           {user ? (
             <button className="btn-landing-primary" onClick={() => navigate('/app')}>
               Go to Board
@@ -271,6 +286,29 @@ export default function LandingPage() {
             <>
               <button className="btn-landing-ghost" onClick={() => openAuth('signin')}>Sign In</button>
               <button className="btn-landing-primary" onClick={() => openAuth('signup')}>Get Started</button>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Hamburger */}
+        <button 
+          className="landing-hamburger" 
+          onClick={() => setNavOpen(!navOpen)}
+          aria-label="Toggle navigation"
+        >
+          {navOpen ? <X size={24} color="#94a3b8" /> : <Menu size={24} color="#94a3b8" />}
+        </button>
+
+        {/* Mobile Drawer */}
+        <div className={`landing-drawer ${navOpen ? 'open' : ''}`}>
+          {user ? (
+            <button className="btn-landing-primary mobile-full-btn" onClick={() => navigate('/app')}>
+              Go to Board
+            </button>
+          ) : (
+            <>
+              <button className="btn-landing-ghost mobile-full-btn" onClick={() => openAuth('signin')}>Sign In</button>
+              <button className="btn-landing-primary mobile-full-btn" onClick={() => openAuth('signup')}>Get Started</button>
             </>
           )}
         </div>

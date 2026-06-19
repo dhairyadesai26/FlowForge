@@ -1,14 +1,27 @@
-import { KanbanSquare, LogOut, Plus, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { KanbanSquare, LogOut, Plus, Search, Menu, X } from "lucide-react";
 import ConnectionStatus from "./ConnectionStatus";
 import { useAuth } from "../../App";
 
 function Navbar({ search, setSearch, priority, setPriority, category, setCategory, onNewTask }) {
   const { user, signOut } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="navbar-logo">
-        <KanbanSquare size={20} strokeWidth={2.5} style={{ color: "#818cf8" }} />
+        <KanbanSquare size={20} strokeWidth={2.5} style={{ color: "#818cf8" }} className="navbar-logo-icon" />
         Kanban Pro
       </div>
 
@@ -76,10 +89,74 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
               aria-label="Sign out"
             >
               <LogOut size={15} strokeWidth={2} />
-              Sign out
+              <span>Sign out</span>
             </button>
           </div>
         )}
+      </div>
+
+      {/* Mobile Hamburger Button */}
+      <button 
+        className="navbar-hamburger" 
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle menu"
+      >
+        {menuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
+      {/* Mobile Drawer */}
+      <div className={`navbar-drawer ${menuOpen ? 'open' : ''}`}>
+        <div className="drawer-search-wrap">
+          <Search size={15} className="drawer-search-icon" />
+          <input
+            className="drawer-search-input"
+            type="text"
+            placeholder="Search tasks…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search tasks (mobile)"
+          />
+        </div>
+        
+        <div className="drawer-filters">
+          <select
+            className="drawer-filter-select"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            aria-label="Filter by priority (mobile)"
+          >
+            <option value="All">All Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+          <select
+            className="drawer-filter-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            aria-label="Filter by category (mobile)"
+          >
+            <option value="All">All Category</option>
+            <option value="Feature">Feature</option>
+            <option value="Bug">Bug</option>
+            <option value="Enhancement">Enhancement</option>
+          </select>
+        </div>
+
+        <div className="drawer-actions">
+          <ConnectionStatus />
+          {user && (
+            <button
+              className="signout-btn"
+              onClick={signOut}
+              style={{ minHeight: '36px', padding: '0.45rem 1rem' }}
+            >
+              <LogOut size={15} strokeWidth={2} />
+              <span>Sign out</span>
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
