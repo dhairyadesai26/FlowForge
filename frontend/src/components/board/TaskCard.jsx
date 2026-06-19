@@ -1,11 +1,9 @@
 import { useState } from "react";
-import TaskModal   from "../task/TaskModal";
+import TaskModal    from "../task/TaskModal";
 import EditTaskForm from "../task/EditTaskForm";
+import { openAttachment } from "../task/FileUploader";
 
-/**
- * TaskCard — draggable card showing task details, badges, attachment preview,
- * edit modal and delete button.
- */
+
 function TaskCard({ task, updateTask, deleteTask }) {
   const [editOpen, setEditOpen] = useState(false);
 
@@ -14,11 +12,6 @@ function TaskCard({ task, updateTask, deleteTask }) {
     Medium: "badge-medium",
     Low:    "badge-low",
   }[task.priority] ?? "badge-medium";
-
-  const isImage = task.attachment && (
-    task.attachment.startsWith("blob:")  ||
-    /\.(png|jpe?g|gif|webp)(\?|$)/i.test(task.attachment)
-  );
 
   const timeAgo = (ts) => {
     const diff = Date.now() - new Date(ts).getTime();
@@ -50,13 +43,38 @@ function TaskCard({ task, updateTask, deleteTask }) {
           </span>
         </div>
 
-        {isImage && (
-          <img
-            src={task.attachment}
-            alt="Task attachment"
-            className="task-attachment-img"
-            data-testid="task-attachment-img"
-          />
+        {task.attachment && (
+          <button
+            type="button"
+            onClick={() => openAttachment(task.attachment)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.4rem",
+              background: "rgba(99,102,241,0.1)",
+              border: "1px solid rgba(99,102,241,0.2)",
+              color: "#818cf8",
+              padding: "0.5rem 0.75rem",
+              borderRadius: "8px",
+              fontSize: "0.8rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              fontFamily: "inherit",
+              marginTop: "0.5rem",
+              transition: "all 0.2s ease"
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = "rgba(99,102,241,0.15)";
+              e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = "rgba(99,102,241,0.1)";
+              e.currentTarget.style.borderColor = "rgba(99,102,241,0.2)";
+            }}
+          >
+            📎 View Attachment
+          </button>
         )}
 
         <div className="task-footer">

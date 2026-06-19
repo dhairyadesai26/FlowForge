@@ -52,6 +52,36 @@ app.get("/api/tasks", async (req, res) => {
 
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
+/* ── PDF Proxy — fetch Cloudinary PDF and serve inline ── */
+app.get("/api/proxy-pdf", async (req, res) => {
+  const { url } = req.query;
+  if (!url || !url.startsWith("https://res.cloudinary.com/")) {
+    return res.status(400).json({ error: "Invalid or missing URL" });
+  }
+  try {
+    const upstream = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; FlowForge/1.0)' }
+    });
+    if (!upstream.ok) {
+      const text = await upstream.text().catch(() => '');
+      console.error(`[proxy-pdf] Cloudinary ${upstream.status}:`, text.substring(0, 300));
+      return res.status(502).json({
+        error: `Cloudinary returned ${upstream.status}`,
+        hint:  "Make sure the upload preset allows PDF (raw) resource type in Cloudinary settings",
+        detail: text.substring(0, 200)
+      });
+    }
+    const buffer = await upstream.arrayBuffer();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'inline; filename="document.pdf"');
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    console.error("[proxy-pdf]", err.message);
+    res.status(500).json({ error: "Proxy error: " + err.message });
+  }
+});
+
 /*
 |──────────────────────────────────────────────────
 | Socket.IO — Real-time Events
