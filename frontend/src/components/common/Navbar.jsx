@@ -22,7 +22,7 @@ function Navbar({ search, setSearch, priority, setPriority, category, setCategor
     <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="navbar-logo">
         <KanbanSquare size={20} strokeWidth={2.5} style={{ color: "#818cf8" }} className="navbar-logo-icon" />
-        Kanban Pro
+        FlowForge
       </div>
 
       <div className="navbar-search-wrap">

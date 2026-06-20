@@ -67,7 +67,7 @@ const AuthModal = ({ isOpen, onClose, initialMode }) => {
         <div className="auth-header">
           <h2 className="auth-title">{isSignIn ? 'Welcome back' : 'Create account'}</h2>
           <p className="auth-subtitle">
-            {isSignIn ? 'Sign in to your Kanban workspace' : 'Get started with Kanban Pro for free'}
+            {isSignIn ? 'Sign in to your FlowForge workspace' : 'Get started with FlowForge for free'}
           </p>
         </div>
 
@@ -273,7 +273,7 @@ export default function LandingPage() {
       <nav className="landing-nav">
         <div className="landing-logo">
           <KanbanSquare size={24} strokeWidth={2.5} />
-          Kanban Pro
+          FlowForge
         </div>
 
         {/* Desktop Actions */}
@@ -464,7 +464,7 @@ export default function LandingPage() {
           </div>
           <h2 className="cta-title">Ready to level up your workflow?</h2>
           <p className="cta-subtitle">
-            Join teams already using Kanban Pro to ship faster and stay organized.
+            Join teams already using FlowForge to ship faster and stay organized.
           </p>
           <button className="btn-hero-primary" onClick={() => openAuth('signup')}>
             Get started — it&apos;s free <ArrowRight size={17} />
@@ -475,7 +475,7 @@ export default function LandingPage() {
       <footer className="landing-footer">
         <div className="footer-logo">
           <KanbanSquare size={16} />
-          Kanban Pro
+          FlowForge
         </div>
         <p className="footer-text">Real-time task management for modern teams.</p>
         <div className="footer-links">

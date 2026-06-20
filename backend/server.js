@@ -154,7 +154,7 @@ io.on("connection", async (socket) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`🚀 Kanban Pro server on http://localhost:${PORT}`);
+  console.log(`🚀 FlowForge server on http://localhost:${PORT}`);
 });
 
 process.on("SIGINT", async () => {
