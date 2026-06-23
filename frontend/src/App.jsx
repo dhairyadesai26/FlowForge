@@ -11,9 +11,8 @@ export function useAuth() {
 }
 
 function AuthProvider({ children }) {
-  const [user, setUser]           = useState(null);
-  const [authReady, setAuthReady] = useState(false); // auth check done?
-  const [splashDone, setSplashDone] = useState(false); // splash animation done?
+  const [user, setUser]     = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -34,7 +33,7 @@ function AuthProvider({ children }) {
           console.error("Auth check failed", err);
         }
       }
-      setAuthReady(true); // auth is done, but splash may still be animating
+      setLoading(false);
     };
     checkAuth();
   }, []);
@@ -49,13 +48,9 @@ function AuthProvider({ children }) {
     localStorage.removeItem("kanban_token");
   };
 
-  // Show splash until BOTH auth is done AND splash animation has finished
-  if (!splashDone) {
-    return (
-      <SplashScreen
-        onDone={() => setSplashDone(true)}
-      />
-    );
+  // Show splash only while auth check is in progress
+  if (loading) {
+    return <SplashScreen />;
   }
 
   return (

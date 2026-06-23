@@ -315,46 +315,21 @@
   overflow: visible;
 }
 
-.splash-bar-fill {
+.splash-bar-indeterminate {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: 40%;
   border-radius: 100px;
-  background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
-  background-size: 200% 100%;
-  animation: barShimmer 2s linear infinite;
-  transition: width 0.08s linear;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(90deg, transparent, #6366f1, #a855f7, transparent);
+  animation: indeterminate 1.4s ease-in-out infinite;
 }
 
-.splash-bar-fill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-  animation: barSweep 1.5s ease-in-out infinite;
-}
-
-@keyframes barShimmer {
-  0%   { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-@keyframes barSweep {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(400%); }
-}
-
-.splash-bar-glow {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(168,85,247,0.8) 0%, transparent 70%);
-  pointer-events: none;
-  filter: blur(4px);
-  transition: left 0.08s linear;
+@keyframes indeterminate {
+  0%   { left: -40%; width: 40%; }
+  60%  { left: 100%; width: 40%; }
+  100% { left: 100%; width: 40%; }
 }
 
 /* ── Status row ── */

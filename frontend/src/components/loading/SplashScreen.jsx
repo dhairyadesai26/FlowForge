@@ -1,100 +1,71 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./SplashScreen.css";
 
 const STAGES = [
-  { id: "init",       label: "Initializing",    icon: "⚡",  duration: 600  },
-  { id: "auth",       label: "Authenticating",  icon: "🔐",  duration: 700  },
-  { id: "preparing",  label: "Preparing boards",icon: "🗂️",  duration: 650  },
-  { id: "syncing",    label: "Syncing workspace",icon: "🔄", duration: 600  },
-  { id: "ready",      label: "Ready!",          icon: "✅",  duration: 400  },
+  { id: "init",      label: "Initializing",     icon: "⚡" },
+  { id: "auth",      label: "Authenticating",   icon: "🔐" },
+  { id: "preparing", label: "Preparing boards", icon: "🗂️" },
+  { id: "syncing",   label: "Syncing workspace", icon: "🔄" },
+  { id: "ready",     label: "Almost ready",     icon: "✅" },
 ];
 
-export default function SplashScreen({ onDone }) {
-  const [stageIdx, setStageIdx]   = useState(0);
-  const [progress, setProgress]   = useState(0);
-  const [exiting,  setExiting]    = useState(false);
+export default function SplashScreen() {
+  const [stageIdx,  setStageIdx]  = useState(0);
   const [particles, setParticles] = useState([]);
-  const timerRef = useRef(null);
 
   /* ── Generate floating particles once ── */
   useEffect(() => {
-    const pts = Array.from({ length: 22 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: 2 + Math.random() * 4,
-      dur: 4 + Math.random() * 8,
-      delay: Math.random() * 6,
-    }));
-    setParticles(pts);
+    setParticles(
+      Array.from({ length: 22 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: 2 + Math.random() * 4,
+        dur:  4 + Math.random() * 8,
+        delay: Math.random() * 6,
+      }))
+    );
   }, []);
 
-  /* ── Stage sequencer ── */
+  /* ── Cycle through stages every 550ms — loops until parent unmounts ── */
   useEffect(() => {
-    if (stageIdx >= STAGES.length) return;
+    const t = setInterval(() => {
+      setStageIdx((s) => (s + 1) % STAGES.length);
+    }, 550);
+    return () => clearInterval(t);
+  }, []);
 
-    const stage = STAGES[stageIdx];
-    const targetProgress = ((stageIdx + 1) / STAGES.length) * 100;
-
-    /* Smoothly animate progress bar */
-    const startProgress = progress;
-    const diff = targetProgress - startProgress;
-    const steps = 40;
-    let step = 0;
-    const animProgress = setInterval(() => {
-      step++;
-      setProgress(startProgress + (diff * step) / steps);
-      if (step >= steps) clearInterval(animProgress);
-    }, stage.duration / steps);
-
-    timerRef.current = setTimeout(() => {
-      if (stageIdx === STAGES.length - 1) {
-        setExiting(true);
-        // Call onDone after exit animation (0.65s) completes
-        setTimeout(() => { if (onDone) onDone(); }, 650);
-      } else {
-        setStageIdx((s) => s + 1);
-      }
-    }, stage.duration);
-
-    return () => {
-      clearTimeout(timerRef.current);
-      clearInterval(animProgress);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stageIdx]);
-
-  const stage = STAGES[Math.min(stageIdx, STAGES.length - 1)];
+  const stage = STAGES[stageIdx];
 
   return (
-    <div className={`splash-root${exiting ? " splash-exit" : ""}`}>
-      {/* ── Ambient orbs ── */}
+    <div className="splash-root">
+      {/* Ambient orbs */}
       <div className="splash-orb splash-orb--1" />
       <div className="splash-orb splash-orb--2" />
       <div className="splash-orb splash-orb--3" />
 
-      {/* ── Grid overlay ── */}
+      {/* Grid overlay */}
       <div className="splash-grid" />
 
-      {/* ── Floating particles ── */}
+      {/* Floating particles */}
       {particles.map((p) => (
         <span
           key={p.id}
           className="splash-particle"
           style={{
-            left: `${p.x}%`,
-            top:  `${p.y}%`,
-            width:  `${p.size}px`,
-            height: `${p.size}px`,
+            left:              `${p.x}%`,
+            top:               `${p.y}%`,
+            width:             `${p.size}px`,
+            height:            `${p.size}px`,
             animationDuration: `${p.dur}s`,
             animationDelay:    `${p.delay}s`,
           }}
         />
       ))}
 
-      {/* ── Main card ── */}
+      {/* Main card */}
       <div className="splash-card">
-        {/* Logo mark */}
+        {/* Logo spinner */}
         <div className="splash-logo-wrap">
           <div className="splash-logo-ring splash-logo-ring--outer" />
           <div className="splash-logo-ring splash-logo-ring--inner" />
@@ -103,14 +74,14 @@ export default function SplashScreen({ onDone }) {
           </div>
         </div>
 
-        {/* Brand name */}
+        {/* Brand */}
         <div className="splash-brand">
           <span className="splash-brand-flow">Flow</span>
           <span className="splash-brand-forge">Forge</span>
         </div>
         <p className="splash-tagline">Collaborative task management, reimagined</p>
 
-        {/* Progress section */}
+        {/* Current stage indicator */}
         <div className="splash-progress-wrap">
           {/* Stage pills */}
           <div className="splash-stages">
@@ -121,7 +92,7 @@ export default function SplashScreen({ onDone }) {
                   "splash-stage-pill" +
                   (idx <  stageIdx ? " done"    : "") +
                   (idx === stageIdx ? " active"  : "") +
-                  (idx >  stageIdx ? " pending" : "")
+                  (idx >  stageIdx ? " pending"  : "")
                 }
               >
                 <span className="splash-stage-icon">{s.icon}</span>
@@ -130,16 +101,9 @@ export default function SplashScreen({ onDone }) {
             ))}
           </div>
 
-          {/* Bar */}
+          {/* Indeterminate progress bar */}
           <div className="splash-bar-track">
-            <div
-              className="splash-bar-fill"
-              style={{ width: `${progress}%` }}
-            />
-            <div
-              className="splash-bar-glow"
-              style={{ left: `${progress}%` }}
-            />
+            <div className="splash-bar-indeterminate" />
           </div>
 
           {/* Status text */}
@@ -148,11 +112,10 @@ export default function SplashScreen({ onDone }) {
             <span className="splash-status-text" key={stage.id}>
               {stage.label}…
             </span>
-            <span className="splash-status-pct">{Math.round(progress)}%</span>
           </div>
         </div>
 
-        {/* Bottom decorative dots */}
+        {/* Dot indicators */}
         <div className="splash-dots">
           {STAGES.map((_, i) => (
             <span
@@ -167,7 +130,6 @@ export default function SplashScreen({ onDone }) {
         </div>
       </div>
 
-      {/* ── Version chip ── */}
       <div className="splash-version">v2.0 · Real-time Kanban</div>
     </div>
   );
