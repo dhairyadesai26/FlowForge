@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import KanbanBoard from "./components/board/KanbanBoard";
 import LandingPage from "./components/landing/LandingPage";
+import SplashScreen from "./components/loading/SplashScreen";
 
 export const AuthContext = createContext(null);
 
@@ -48,7 +49,7 @@ function AuthProvider({ children }) {
   };
 
   if (loading) {
-    return <div className="h-screen w-screen flex items-center justify-center bg-[#0a0a0f] text-white">Loading...</div>;
+    return <SplashScreen />;
   }
 
   return (
