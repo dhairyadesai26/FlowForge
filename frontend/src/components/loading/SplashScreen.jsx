@@ -9,7 +9,7 @@ const STAGES = [
   { id: "ready",      label: "Ready!",          icon: "✅",  duration: 400  },
 ];
 
-export default function SplashScreen() {
+export default function SplashScreen({ onDone }) {
   const [stageIdx, setStageIdx]   = useState(0);
   const [progress, setProgress]   = useState(0);
   const [exiting,  setExiting]    = useState(false);
@@ -50,6 +50,8 @@ export default function SplashScreen() {
     timerRef.current = setTimeout(() => {
       if (stageIdx === STAGES.length - 1) {
         setExiting(true);
+        // Call onDone after exit animation (0.65s) completes
+        setTimeout(() => { if (onDone) onDone(); }, 650);
       } else {
         setStageIdx((s) => s + 1);
       }
